@@ -37,7 +37,7 @@ app.post('/users', (request, response) => {
     id: uuidv4(),
     name,
     username,
-    todo: []
+    todos: []
   }
 
   users.push(user);
@@ -53,14 +53,14 @@ app.get('/todos', checksExistsUserAccount, (request, response) => {
 
 app.post('/todos', checksExistsUserAccount, (request, response) => {
   const { title, deadline } = request.body;
-  const { todo } = request.user;
+  const { todos } = request.user;
 
   const todo = {
     id: uuidv4(),
     title,
     done: false,
     deadline: new Date(deadline),
-    create_at: new Date()
+    created_at: new Date()
   }
 
   todos.push(todo);
@@ -76,7 +76,7 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
   const todo = todos.find((todo) => todo.id === id);
 
   if(!todo) {
-    return response.status(400).json({ error: "Todo not exists"})
+    return response.status(404).json({ error: "Todo not exists"})
   }
 
   todo.title = title;
@@ -92,7 +92,7 @@ app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
   const todo = todos.find((todo) => todo.id === id);
 
   if(!todo) {
-    return response.status(400).json({ error: "Todo not exists"})
+    return response.status(404).json({ error: "Todo not exists"})
   }
 
   todo.done = true;
@@ -107,10 +107,10 @@ app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
   const todo = todos.find((todo) => todo.id === id);
 
   if(!todo) {
-    return response.status(400).json({ error: "Todo not exists"})
+    return response.status(404).json({ error: "Todo not exists"})
   }
 
-  todo.splice(todo, 1);
+  todos.splice(todo, 1);
 
   return response.status(204).json();
 });
